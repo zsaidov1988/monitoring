@@ -112,13 +112,72 @@ Prometheus configuration
 ```
 ## Metric types
 ![Metrics](images/image_metric_types.png)
-## Counter
+### Counter
 ![Counter](images/image_counter.png)
-## Gauge
+### Gauge
 ![Gauge](images/image_gauge.png)
-## Histogram
+### Histogram
 ![Histogram](images/image_histogram.png)
-## Summary
+### Summary
 ![Summary](images/image_summary.png)
-## Labels
+### Labels
 ![Labels](images/image_labels.png)
+Check prometheus configurations
+```
+promtool check config /etc/prometheus/prometheus.yml
+```
+## Collect docker metrics
+/etc/docker/daemon.json
+```
+{
+  "metrics-addr": "127.0.0.1:9323",
+  "experimental": true
+}
+```
+```
+systemctl restart docker
+curl localhost:9323/metrics
+```
+## Cadvisor
+```
+VERSION=v0.36.0 # use the latest release version from https://github.com/google/cadvisor/releases
+sudo docker run \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:ro \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --volume=/dev/disk/:/dev/disk:ro \
+  --publish=8080:8080 \
+  --detach=true \
+  --name=cadvisor \
+  --privileged \
+  --device=/dev/kmsg \
+  gcr.io/cadvisor/cadvisor:$VERSION
+```
+## Queries
+### Range data
+![Range data](images/image_range.png) 
+### Get old data
+![Get old data](images/image_get_old_data.png)
+### Get exact time metric
+![Get exact time metric](images/image_exact_time_metric.png)
+### Get old exact time metric
+![Get old exact time metric](images/image_exact_old.png)
+### Ignoring label mismatching
+![Ignoring label mismatching](images/image_label_ignoring.png)
+### Matching by a label
+![Matching by a label](images/image_match_label.png)
+### Vector Matching Keywords
+![Vector Matching Keywords](images/image_vector_matching.png)
+### Aggregation
+![Aggregation](images/image_aggregation.png)
+```
+by(instance, path) - instance va path labellari bo’yicha guruhlash
+
+without(job) - job dan boshqa labellar bo’yicha guruhlash
+```
+## Functions
+[Docs](https://prometheus.io/docs/prometheus/latest/querying/functions/)
+### Date & time
+![Date & time](images/image_date_time.png)
+## Relabeling
