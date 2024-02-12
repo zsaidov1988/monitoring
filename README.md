@@ -15,3 +15,5 @@
 [Functions](docs/functions.md)
 
 [Relabeling](docs/relabeling.md)
+
+[Alerting](docs/alerting.md)

@@ -2,21 +2,21 @@
 
 ## Queries
 ### Range data
-![Range data](images/image_range.png) 
+![Range data](../images/image_range.png) 
 ### Get old data
-![Get old data](images/image_get_old_data.png)
+![Get old data](../images/image_get_old_data.png)
 ### Get exact time metric
-![Get exact time metric](images/image_exact_time_metric.png)
+![Get exact time metric](../images/image_exact_time_metric.png)
 ### Get old exact time metric
-![Get old exact time metric](images/image_exact_old.png)
+![Get old exact time metric](../images/image_exact_old.png)
 ### Ignoring label mismatching
-![Ignoring label mismatching](images/image_label_ignoring.png)
+![Ignoring label mismatching](../images/image_label_ignoring.png)
 ### Matching by a label
-![Matching by a label](images/image_match_label.png)
+![Matching by a label](../images/image_match_label.png)
 ### Vector Matching Keywords
-![Vector Matching Keywords](images/image_vector_matching.png)
+![Vector Matching Keywords](../images/image_vector_matching.png)
 ### Aggregation
-![Aggregation](images/image_aggregation.png)
+![Aggregation](../images/image_aggregation.png)
 ```
 by(instance, path) - instance va path labellari bo’yicha guruhlash
 
