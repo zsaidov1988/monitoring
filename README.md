@@ -17,3 +17,5 @@
 [Relabeling](docs/relabeling.md)
 
 [Alerting](docs/alerting.md)
+
+[Examples](docs/examples.md)
