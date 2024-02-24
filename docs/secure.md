@@ -5,8 +5,9 @@
 ### TLS
 
 ```
-sudo openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout node_exporter.key -out node_exporter.crt -subj "/C=Tashkent/ST=Uacademy/L=Udevs/O=Proxima/CN=localhost" -addext "subjectAltName = DNS:localhost"
-vi config.yml
+openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout /etc/node_exporter/node_exporter.key -out /etc/node_exporter/node_exporter.crt -subj "/C=BE/ST=Antwerp/L=Brasschaat/O=Inuits/CN=localhost" -addext "subjectAltName = DNS:localhost"
+
+/etc/node_exporter/config.yml
 
 tls_server_config:
   cert_file: node_exporter.crt
@@ -20,7 +21,7 @@ mv node_exporter.* /etc/node_exporter
 sudo cp config.yaml /etc/node_exporter
 chown -R node_exporter:node_exporter /etc/node_exporter
 
-./node_exporter --web.config=config.yml
+./node_exporter --web.config.file=/etc/node_exporter/config.yml
 ```
 
 #### Check connection
@@ -42,7 +43,7 @@ scrape_configs:
   - job_name: "node"
     scheme: https
     tls_config:
-      ca_file: /etc/prometheus/prometheus.yml
+      ca_file: /etc/prometheus/node_exporter.crt
       insecure_skip_verify: true # self-signed bo'lgani uchun
 ```
 ### Authentication
