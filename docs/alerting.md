@@ -57,7 +57,7 @@ Type=simple
 User=alertmanager
 Group=alertmanager
 ExecStart=/usr/local/bin/alertmanager \
-  --config.file=/etc/alertmanager/alertmanager.yml
+  --config.file=/etc/alertmanager/alertmanager.yml \
   --storage.path=/var/lib/alertmanager
 
 Restart=always

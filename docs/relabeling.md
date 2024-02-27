@@ -21,10 +21,10 @@ Result
 ### Drop Label
 ![Drop Label](../images/image_droplabel.png)
 ### Rename Label
-![Rename Label](../images/image_rename_label.png.png)
+![Rename Label](../images/image_rename_label.png)
 ### Drop Label
-![Drop Label](../images/image_drop_label.png.png)
+![Drop Label](../images/image_drop_label.png)
 ### Label Regex
-![Label Regex](../images/image_label_regex.png.png)
+![Label Regex](../images/image_label_regex.png)
 
 [Main menu](../README.md)
