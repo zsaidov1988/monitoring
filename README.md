@@ -19,3 +19,5 @@
 [Alerting](docs/alerting.md)
 
 [Examples](docs/examples.md)
+
+[Kubernetes](docs/kubernetes.md)
