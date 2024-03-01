@@ -295,7 +295,150 @@ WantedBy=multi-user.target
 WantedBy=docker.service
 ```
 
+/etc/systemd/system/promtail.service
+
+```
+[Unit]
+Description=Docker Service for promtail
+After=network.service docker.service
+Requires=docker.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker stop -t 60 promtail
+ExecStartPre=-/usr/bin/docker rm promtail
+ExecStart=/usr/bin/docker run \
+--rm \
+--name promtail \
+-v /var/log:/var/log:ro \
+-v /etc/victoriametrics/promtail-config.yml:/etc/promtail/promtail-config.yml \
+--network docker_network \
+grafana/promtail:latest \
+-config.file=/etc/promtail/promtail-config.yml \
+-config.expand-env=true
+ExecStop=-/usr/bin/docker stop -t 60 promtail
+
+ExecReload=/usr/bin/docker restart 'promtail'
+
+Restart=always
+RestartSec=20s
+
+SuccessExitStatus=SIGKILL SIGTERM 143 137
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=docker.service
+```
+
+```
+[Unit]
+Description=Docker Service for cadvisor
+After=network.service docker.service
+Requires=docker.service
+
+[Service]
+User=root
+Group=root
+Type=simple
+ExecStartPre=-/usr/bin/docker stop -t 60 cadvisor
+ExecStartPre=-/usr/bin/docker rm cadvisor
+ExecStart=/usr/bin/docker run \
+--rm \
+--name cadvisor \
+--volume=/:/rootfs:ro \
+--volume=/var/run:/var/run:ro \
+--volume=/sys:/sys:ro \
+--volume=/var/lib/docker/:/var/lib/docker:ro \
+--volume=/dev/disk/:/dev/disk:ro \
+--publish=8080:8080 \
+--network docker_network \
+--privileged \
+--device=/dev/kmsg \
+gcr.io/cadvisor/cadvisor:latest
+
+ExecStop=-/usr/bin/docker stop -t 60 cadvisor
+
+ExecReload=/usr/bin/docker restart 'cadvisor'
+
+Restart=always
+RestartSec=20s
+
+SuccessExitStatus=SIGKILL SIGTERM 143 137
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=docker.service
+```
+
 ### Configuration files
+
+/etc/victoriametrics/promtail-config.yml
+
+```
+server:
+  http_listen_address: 0.0.0.0
+  http_listen_port: 9080
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: java-backend
+    pipeline_stages:
+      - multiline:
+          firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
+          max_wait_time: 3s
+          max_lines: 255
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: shipox-staging-backend
+          env: staging
+          type: app
+          __path__: /var/log/tomcat/catalina.out
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*log
+
+  - job_name: containers
+    entry_parser: raw
+
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: containerlogs
+          __path__: /var/lib/docker/containers/*/*log
+
+    # --log-opt tag="{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    pipeline_stages:
+      - json:
+          expressions:
+            stream: stream
+            attrs: attrs
+            tag: attrs.tag
+
+      - regex:
+          expression: (?P<image_name>(?:[^|]*[^|])).(?P<container_name>(?:[^|]*[^|])).(?P<image_id>(?:[^|]*[^|])).(?P<container_id>(?:[^|]*[^|]))
+          source: "tag"
+
+      - labels:
+          tag:
+          stream:
+          image_name:
+          container_name:
+          image_id:
+          container_id:
+
+```
+
 
 /etc/victoriametrics/alertmanager.yml
 
