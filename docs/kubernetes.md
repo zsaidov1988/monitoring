@@ -13,7 +13,8 @@ helm show values prometheus-community/kube-prometheus-stack > kube-prometheus-st
 
 ## Install
 ```
-helm install prometheus prometheus-community/kube-prometheus-stack --values kube-prometheus-stack.yaml
+helm install prometheus prometheus-community/kube-prometheus-stack --values kube-prometheus-stack.yaml -n monitoring --create-namespace
+helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --values kube-prometheus-stack.yaml -n monitoring
 ```
 
 ## Create ingress for grafana
